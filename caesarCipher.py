@@ -1,15 +1,16 @@
 # Caesar Cipher
 
-import pyperclip
+# Caesar Cipher
+from tkinter import *
+
+window = Tk()
 
 #the string to be encrypted/decrypted
 message = input('Enter a message: ')
+message = message.upper()
 
 # the encryption/decryption key
-key = 13
-
-# tells the program to encrypt or decrypt
-mode = 'decrypt'
+key = 22
 
 # every possible symbol that can be encrypted
 LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
@@ -17,34 +18,46 @@ LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 # stores the encrypted/decrypted form of the message
 translated = ''
 
-# capitalize the string in message
-message = message.upper()
-
 # run the encryption/decryption code on each symbol in the message string
-for symbol in message:
-    if symbol in LETTERS:
-        # get the encrypted (or decrypted) number for this symbol
-        num = LETTERS.find(symbol)
-        if mode == 'encrypt':
+def encrypt(message):
+    global key, translated
+    for symbol in message:
+        if symbol in LETTERS:
+            num = LETTERS.find(symbol)
             num = num + key
-        elif mode == 'decrypt':
+                #handle wraparound (replace this with modular arithmetic)
+            if num >= len(LETTERS):
+                num = num - len(LETTERS)
+            translated = translated + LETTERS[num]
+        else:
+            translated = translated + symbol
+
+def decrypt(message):
+    global key, translated
+    for symbol in message:
+        if symbol in LETTERS:
+            num = LETTERS.find(symbol)
             num = num - key
+                #handle wraparound (replace this with modular arithmetic)
+            if num < 0:
+                num = num + len(LETTERS)
+            translated = translated + LETTERS[num]
+        else:
+            translated = translated + symbol
+    #add code to update label here
 
-        # handle wrap-around if num is larger than the length of LETTERS or < 0
-
-        if num >= len(LETTERS):
-            num = num - len(LETTERS)
-        elif num < 0:
-            num = num + len(LETTERS)
-
-        # add encrypted/decrypted number's symbol at the end of translated
-        translated = translated + LETTERS[num]
-    else:
-        # just add the symbol without encrypting/decrypting
-        translated = translated + symbol
-
-# print the encrypted/decrypted string to the screen
 print(translated)
 
-#copy the encrypted/decrypted string to the clipboard
-pyperclip.copy(translated)
+window.title('Caesar Cipher')
+lbl_msg = Label(window, text = 'Message:')
+lbl_orig = Label(window, text = 'Original Message:')
+lbl_enc = Label(window, text = 'Encrypted Message:')
+enc_btn = Button(window, text = 'Encrypt', command=encrypt)
+dec_btn = Button(window, text = 'Decrypt', command=decrypt)
+
+lbl_msg.pack(side = LEFT)
+lbl_orig.pack(side = LEFT)
+lbl_enc.pack(side = LEFT)
+enc_btn.pack(side = RIGHT)
+dec_btn.pack(side = RIGHT)
+window.mainloop()
