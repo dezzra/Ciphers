@@ -1,7 +1,4 @@
 # Caesar Cipher
-
-import pyperclip
-
 #the string to be encrypted/decrypted
 message = input('Enter a message: ')
 
@@ -26,17 +23,11 @@ for symbol in message:
         # get the encrypted (or decrypted) number for this symbol
         num = LETTERS.find(symbol)
         if mode == 'encrypt':
-            num = num + key
+            num = (num + key) % len(LETTERS)
         elif mode == 'decrypt':
             num = num - key
-
-        # handle wrap-around if num is larger than the length of LETTERS or < 0
-
-        if num >= len(LETTERS):
-            num = num - len(LETTERS)
-        elif num < 0:
-            num = num + len(LETTERS)
-
+            if num < 0:
+                num = num + len(LETTERS)
         # add encrypted/decrypted number's symbol at the end of translated
         translated = translated + LETTERS[num]
     else:
@@ -45,6 +36,3 @@ for symbol in message:
 
 # print the encrypted/decrypted string to the screen
 print(translated)
-
-#copy the encrypted/decrypted string to the clipboard
-pyperclip.copy(translated)
